@@ -1,4 +1,4 @@
-MSM5232 VST3 (Core + CLI)
+# MSM5232 VST3 (Core + CLI)
 
 This project simulates MSM5232-like tones using a procedurally generated wavetable (based on note.md’s tanh curve and weights). It provides a lightweight synth core, a small CLI renderer, and an optional VST3 wrapper.
 
@@ -36,6 +36,19 @@ cmake -S . -B build -DBUILD_VST3=ON -DVST3_SDK_DIR=/path/to/VST3_SDK
 cmake --build build -j
 ```
 Produces `msm5232_vst3.vst3` under `build/vst3/` (or your generator’s default path).
+
+### Submodules (VST3 SDK)
+- Optional, for building the VST3 plug‑in within this repo:
+```
+git submodule add https://github.com/steinbergmedia/vst3sdk VST_SDK/vst3sdk
+git submodule update --init --recursive
+```
+- With the submodule present, CMake auto‑detects it. You can still set `-DVST3_SDK_DIR=/your/path` to override.
+- For reproducible builds, pin the submodule to a known tag/commit:
+```
+git -C VST_SDK/vst3sdk checkout <tag-or-commit>
+git add VST_SDK/vst3sdk && git commit -m "Pin vst3sdk to <tag-or-commit>"
+```
 
 ### Windows Example (single-file .vst3)
 From Developer PowerShell for VS 2022:
@@ -111,6 +124,10 @@ Output: `build-win/bin/Release/msm5232_vst3.vst3` (single file). If a `.dll` is 
 - `src/app/`: CLI offline renderer
 - `src/vst3/`: minimal VST3 processor/controller (compiled only when enabled)
 
+### License
+- The source code in this repository is licensed under the terms in `LICENSE`.
+- The Steinberg VST 3 SDK is licensed separately by Steinberg/Yamaha. If you add it as a submodule under `VST_SDK/vst3sdk`, you do so under the SDK’s license; read the SDK’s `LICENSE.txt` for redistribution/usage terms.
+
 ---
 
 ## 日本語
@@ -143,6 +160,19 @@ cmake -S . -B build -DBUILD_VST3=ON -DVST3_SDK_DIR=/path/to/VST3_SDK
 cmake --build build -j
 ```
 `build/vst3/`（または使用ジェネレータ既定の場所）に `msm5232_vst3.vst3` が生成されます。
+
+### サブモジュール（VST3 SDK）
+- 本リポ内で VST3 をビルドしたい場合の任意設定：
+```
+git submodule add https://github.com/steinbergmedia/vst3sdk VST_SDK/vst3sdk
+git submodule update --init --recursive
+```
+- サブモジュールが存在すれば CMake が自動検出します。明示的に指定したい場合は `-DVST3_SDK_DIR=/your/path` を使用してください。
+- 再現性のため、既知のタグ/コミットに固定（ピン留め）することを推奨：
+```
+git -C VST_SDK/vst3sdk checkout <tag-or-commit>
+git add VST_SDK/vst3sdk && git commit -m "Pin vst3sdk to <tag-or-commit>"
+```
 
 ### Windows 例（単一ファイル .vst3）
 Developer PowerShell for VS 2022 から：
@@ -218,6 +248,10 @@ cmake --build build-win --config Release --target msm5232_vst3
 - `src/app/`：CLI オフラインレンダラ
 - `src/vst3/`：最小限の VST3 プロセッサ／コントローラ（有効化時のみ）
 
+### ライセンス
+- 本リポジトリのソースコードは `LICENSE` の条件に従います。
+- Steinberg VST 3 SDK は別ライセンスです。`VST_SDK/vst3sdk` にサブモジュールとして追加する場合は、SDK 同梱の `LICENSE.txt` を必ず確認し、その条件に従ってください（再配布条件等）。
+
 ---
 
 ## Changelog / 変更履歴
@@ -258,4 +292,3 @@ cmake --build build-win --config Release --target msm5232_vst3
 
 ### Limitations
 - No custom GUI (host generic editor is used).
-- Factory/controller IDs are placeholders for testing; replace before distribution.
