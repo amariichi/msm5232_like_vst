@@ -12,6 +12,15 @@ endif()
 option(BUILD_VST3 "Build VST3 plugin (requires Steinberg VST3 SDK)" OFF)
 set(VST3_SDK_DIR "" CACHE PATH "Path to VST3_SDK directory (when BUILD_VST3=ON)")
 
+# Convenience: auto-detect SDK in repo if present as submodule at VST_SDK/vst3sdk
+if(BUILD_VST3 AND NOT VST3_SDK_DIR)
+    set(_cand "${CMAKE_SOURCE_DIR}/VST_SDK/vst3sdk")
+    if(EXISTS "${_cand}/cmake/modules/SMTG_VST3_SDK.cmake")
+        set(VST3_SDK_DIR "${_cand}" CACHE PATH "Path to VST3_SDK" FORCE)
+        message(STATUS "Using VST3 SDK at: ${VST3_SDK_DIR}")
+    endif()
+endif()
+
 if(BUILD_VST3)
     if(NOT VST3_SDK_DIR)
         message(FATAL_ERROR "BUILD_VST3=ON but VST3_SDK_DIR is not set")
